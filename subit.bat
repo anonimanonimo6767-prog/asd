@@ -1,43 +1,32 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: CONFIG
-set REPO_PATH=%~dp0
+set REPO_PATH=C:\Users\anoni\v67-github-build
 set BRANCH=main
 set COMMIT_MSG=auto: update %date% %time%
 
-:: NAV
 cd /d "%REPO_PATH%"
 
-:: CHECK GIT
-git rev-parse --is-inside-work-tree >nul 2>&1
-if errorlevel 1 (
-    echo [!] No git repo found. Initializing...
-    git init
-    git remote add origin YOUR_REMOTE_URL_HERE
-)
+git init
 
-:: STAGE ALL
+git remote remove origin 2>nul
+git remote add origin https://github.com/anonimanonimo6767-prog/asd.git
+
 git add -A
 
-:: CHECK IF ANYTHING TO COMMIT
 git diff --cached --quiet
 if not errorlevel 1 (
-    echo [~] Nothing to commit. Already up to date.
+    echo [~] Nada que subir.
     pause
     exit /b 0
 )
 
-:: COMMIT
 git commit -m "%COMMIT_MSG%"
 
-:: PUSH
-git push origin %BRANCH%
-if errorlevel 1 (
-    echo [!] Push failed. Trying with upstream set...
-    git push --set-upstream origin %BRANCH%
-)
+git branch -M main
+
+git push -u origin main
 
 echo.
-echo [OK] Subido a GitHub: %BRANCH%
+echo [OK] Subido.
 pause
