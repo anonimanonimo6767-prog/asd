@@ -21,11 +21,11 @@ jobs:
           Rename-Item "imgui-1.90.4" "imgui"
 
       - name: Configure and Build
-        shell: cmd
+        shell: pwsh
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cmake -B build -G "Visual Studio 17 2022" -A x64
-          cmake --build build --config Release
+          $vsPath = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $vcvars = "$vsPath\VC\Auxiliary\Build\vcvars64.bat"
+          cmd /c "call `"$vcvars`" ^&^& cmake -B build -G `"Visual Studio 17 2022`" -A x64 ^&^& cmake --build build --config Release"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
