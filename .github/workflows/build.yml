@@ -13,8 +13,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup MSVC
+      - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.28.0'
 
       - name: Download ImGui
         shell: powershell
@@ -24,13 +29,15 @@ jobs:
           Rename-Item "imgui-1.90.4" "imgui"
 
       - name: Configure CMake
-        run: cmake -B build -G "Visual Studio 17 2022" -A x64
+        shell: cmd
+        run: cmake -B build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release
 
       - name: Build Release
-        run: cmake --build build --config Release
+        shell: cmd
+        run: cmake --build build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: v67suite-exe
-          path: build/Release/v67suite.exe
+          path: build/v67suite.exe
